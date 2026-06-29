@@ -1,3 +1,7 @@
+import {
+  hasBackendSignals,
+  hasFrontendSignals,
+} from "@/server/analysis/signals";
 import type {
   ArchitectureStyle,
   DetectedConfigs,
@@ -8,21 +12,19 @@ export function inferArchitectureStyle(
   folders: DetectedFolders,
   configs: DetectedConfigs,
 ): ArchitectureStyle {
-  const hasFrontendSignals =
-    folders.app || folders.pages || folders.components;
-  const hasBackendSignals =
-    folders.api || folders.services || folders.db;
+  const frontend = hasFrontendSignals(folders);
+  const backend = hasBackendSignals(folders);
   const hasSharedModuleRoot = folders.src || folders.lib;
 
-  if (hasFrontendSignals && hasBackendSignals) {
+  if (frontend && backend) {
     return "fullstack-app";
   }
 
-  if (hasFrontendSignals && !hasBackendSignals) {
+  if (frontend && !backend) {
     return "frontend-heavy";
   }
 
-  if (hasBackendSignals && !hasFrontendSignals) {
+  if (backend && !frontend) {
     return "backend-heavy";
   }
 

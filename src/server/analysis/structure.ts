@@ -23,6 +23,39 @@ function hasFolder(tree: TreeEntry[], folderName: string): boolean {
   });
 }
 
+/** Matches a top-level folder or the same folder nested under common src-based layouts. */
+function hasFolderAtRootOrUnderSrc(
+  tree: TreeEntry[],
+  folderName: string,
+): boolean {
+  if (hasFolder(tree, folderName)) {
+    return true;
+  }
+
+  return hasFolder(tree, `src/${folderName}`);
+}
+
+const NEXTJS_API_PREFIXES = [
+  "api/",
+  "app/api/",
+  "src/app/api/",
+  "pages/api/",
+  "src/pages/api/",
+] as const;
+
+function hasPathPrefix(tree: TreeEntry[], prefixes: readonly string[]): boolean {
+  return tree.some((entry) => {
+    const path = normalizePath(entry.path);
+    return prefixes.some(
+      (prefix) => path === prefix.slice(0, -1) || path.startsWith(prefix),
+    );
+  });
+}
+
+function hasApiRoutes(tree: TreeEntry[]): boolean {
+  return hasPathPrefix(tree, NEXTJS_API_PREFIXES);
+}
+
 function hasGithubWorkflows(tree: TreeEntry[]): boolean {
   const prefix = `${GITHUB_WORKFLOWS_PATH}/`;
 
@@ -48,14 +81,15 @@ function hasConfigFile(tree: TreeEntry[], candidates: readonly string[]): boolea
 export function detectFolders(tree: TreeEntry[]): DetectedFolders {
   return {
     src: hasFolder(tree, "src"),
-    app: hasFolder(tree, "app"),
-    pages: hasFolder(tree, "pages"),
-    api: hasFolder(tree, "api"),
-    components: hasFolder(tree, "components"),
-    services: hasFolder(tree, "services"),
-    lib: hasFolder(tree, "lib"),
-    db: hasFolder(tree, "db"),
-    tests: hasFolder(tree, "tests") || hasFolder(tree, "__tests__"),
+    app: hasFolderAtRootOrUnderSrc(tree, "app"),
+    pages: hasFolderAtRootOrUnderSrc(tree, "pages"),
+    api: hasApiRoutes(tree),
+    components: hasFolderAtRootOrUnderSrc(tree, "components"),
+    services: hasFolderAtRootOrUnderSrc(tree, "services"),
+    lib: hasFolderAtRootOrUnderSrc(tree, "lib"),
+    db: hasFolderAtRootOrUnderSrc(tree, "db"),
+    tests:
+      hasFolderAtRootOrUnderSrc(tree, "tests") || hasFolder(tree, "__tests__"),
     githubWorkflows: hasGithubWorkflows(tree),
   };
 }

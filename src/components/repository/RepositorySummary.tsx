@@ -4,7 +4,10 @@ import { StatusBadge } from "@/components/job/StatusBadge";
 import { TerminalCommandBar } from "@/components/ui/TerminalCommandBar";
 import { EmptyState } from "@/components/ui/EmptyState";
 import type { RepositoryDetailResponse, RepositoryReportResponse } from "@/types/api";
-import type { StructureDetection } from "@/types/github-analysis";
+import {
+  hasBackendSignals,
+  hasFrontendSignals,
+} from "@/server/analysis/signals";
 import { formatArchitectureStyle, formatTimestamp } from "@/lib/utils/format";
 
 type RepositoryHeaderProps = {
@@ -44,14 +47,6 @@ export function RepositoryHeader({
 type RepositoryQuickSummaryProps = {
   reportData: RepositoryReportResponse;
 };
-
-function hasFrontendSignals(structure: StructureDetection): boolean {
-  return structure.folders.app || structure.folders.pages || structure.folders.components;
-}
-
-function hasBackendSignals(structure: StructureDetection): boolean {
-  return structure.folders.api || structure.folders.services || structure.folders.db;
-}
 
 function QuickSummarySignal({
   label,
@@ -141,11 +136,11 @@ export function RepositoryQuickSummary({ reportData }: RepositoryQuickSummaryPro
       <QuickSummaryStat label="TODO items" value={todos_json.total} tone="accent" />
       <QuickSummarySignal
         label="Frontend signals"
-        value={hasFrontendSignals(structure_json)}
+        value={hasFrontendSignals(structure_json.folders)}
       />
       <QuickSummarySignal
         label="Backend signals"
-        value={hasBackendSignals(structure_json)}
+        value={hasBackendSignals(structure_json.folders)}
       />
       <QuickSummarySignal
         label="Docker"

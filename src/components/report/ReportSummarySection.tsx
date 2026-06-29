@@ -1,4 +1,8 @@
 import type { AnalysisReport } from "@/types/github-analysis";
+import {
+  hasBackendSignals,
+  hasFrontendSignals,
+} from "@/server/analysis/signals";
 import { formatArchitectureStyle } from "@/lib/utils/format";
 import { SectionCard } from "@/components/ui/SectionCard";
 import { StatCard } from "@/components/ui/StatCard";
@@ -6,16 +10,6 @@ import { StatCard } from "@/components/ui/StatCard";
 type ReportSummarySectionProps = {
   report: AnalysisReport;
 };
-
-function hasFrontend(report: AnalysisReport): boolean {
-  const { folders } = report.structure_json;
-  return folders.app || folders.pages || folders.components;
-}
-
-function hasBackend(report: AnalysisReport): boolean {
-  const { folders } = report.structure_json;
-  return folders.api || folders.services || folders.db;
-}
 
 function hasDocker(report: AnalysisReport): boolean {
   const { configs } = report.structure_json;
@@ -44,8 +38,14 @@ export function ReportSummarySection({ report }: ReportSummarySectionProps) {
           value={formatArchitectureStyle(summary_json.architectureStyle)}
         />
         <StatCard label="TODO count" value={todos_json.total} />
-        <StatCard label="Has frontend" value={hasFrontend(report) ? "Yes" : "No"} />
-        <StatCard label="Has backend" value={hasBackend(report) ? "Yes" : "No"} />
+        <StatCard
+          label="Has frontend"
+          value={hasFrontendSignals(report.structure_json.folders) ? "Yes" : "No"}
+        />
+        <StatCard
+          label="Has backend"
+          value={hasBackendSignals(report.structure_json.folders) ? "Yes" : "No"}
+        />
         <StatCard label="Has Docker" value={hasDocker(report) ? "Yes" : "No"} />
         <StatCard
           label="Has CI"
