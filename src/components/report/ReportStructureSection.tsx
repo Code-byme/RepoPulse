@@ -39,7 +39,7 @@ export function ReportStructureSection({ structure }: ReportStructureSectionProp
     { label: "src/", detected: structure.folders.src },
     { label: "app/", detected: structure.folders.app },
     { label: "pages/", detected: structure.folders.pages },
-    { label: "api/", detected: structure.folders.api },
+    { label: "api/ (incl. app/api)", detected: structure.folders.api },
     { label: "components/", detected: structure.folders.components },
     { label: "services/", detected: structure.folders.services },
     { label: "lib/", detected: structure.folders.lib },
