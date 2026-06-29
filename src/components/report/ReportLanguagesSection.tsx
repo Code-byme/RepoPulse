@@ -17,66 +17,56 @@ export function ReportLanguagesSection({ languages }: ReportLanguagesSectionProp
     >
       <div className="grid gap-6 lg:grid-cols-2">
         <div>
-          <h3 className="mb-3 text-sm font-medium text-zinc-900 dark:text-zinc-100">
-            By language
-          </h3>
+          <h3 className="rp-subheading">By language</h3>
           {languages.byLanguage.length > 0 ? (
-            <div className="overflow-x-auto">
-              <table className="min-w-full text-left text-sm">
+            <div className="rp-table-wrap">
+              <table className="rp-table">
                 <thead>
-                  <tr className="border-b border-zinc-200 dark:border-zinc-800">
-                    <th className="py-2 pr-4 font-medium text-zinc-500">Language</th>
-                    <th className="py-2 pr-4 font-medium text-zinc-500">Files</th>
-                    <th className="py-2 font-medium text-zinc-500">Share</th>
+                  <tr>
+                    <th>Language</th>
+                    <th>Files</th>
+                    <th>Share</th>
                   </tr>
                 </thead>
                 <tbody>
                   {languages.byLanguage.map((entry) => (
-                    <tr
-                      key={entry.language}
-                      className="border-b border-zinc-100 dark:border-zinc-900"
-                    >
-                      <td className="py-2 pr-4">{entry.language}</td>
-                      <td className="py-2 pr-4">{entry.fileCount}</td>
-                      <td className="py-2">{entry.percentage}%</td>
+                    <tr key={entry.language}>
+                      <td className="font-mono text-blue">{entry.language}</td>
+                      <td className="font-mono">{entry.fileCount}</td>
+                      <td className="font-mono">{entry.percentage}%</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
           ) : (
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">No language data</p>
+            <p className="text-sm text-text-muted">No language data</p>
           )}
         </div>
 
         <div>
-          <h3 className="mb-3 text-sm font-medium text-zinc-900 dark:text-zinc-100">
-            By extension
-          </h3>
+          <h3 className="rp-subheading">By extension</h3>
           {sortedExtensions.length > 0 ? (
-            <div className="overflow-x-auto">
-              <table className="min-w-full text-left text-sm">
+            <div className="rp-table-wrap">
+              <table className="rp-table">
                 <thead>
-                  <tr className="border-b border-zinc-200 dark:border-zinc-800">
-                    <th className="py-2 pr-4 font-medium text-zinc-500">Extension</th>
-                    <th className="py-2 font-medium text-zinc-500">Files</th>
+                  <tr>
+                    <th>Extension</th>
+                    <th>Files</th>
                   </tr>
                 </thead>
                 <tbody>
                   {sortedExtensions.map(([extension, count]) => (
-                    <tr
-                      key={extension}
-                      className="border-b border-zinc-100 dark:border-zinc-900"
-                    >
-                      <td className="py-2 pr-4 font-mono text-xs">{extension}</td>
-                      <td className="py-2">{count}</td>
+                    <tr key={extension}>
+                      <td className="rp-mono">{extension}</td>
+                      <td className="font-mono">{count}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
           ) : (
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">No extension data</p>
+            <p className="text-sm text-text-muted">No extension data</p>
           )}
         </div>
       </div>

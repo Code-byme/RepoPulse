@@ -13,11 +13,35 @@ import {
   findLatestAnalysisJobByRepositoryId,
 } from "@/server/repositories/analysis-job.repository";
 import { findLatestCompletedAnalysisResultByRepositoryId } from "@/server/repositories/analysis-result.repository";
-import { findRepositoryById } from "@/server/repositories/repository.repository";
+import {
+  findAllRepositories,
+  findRepositoryById,
+} from "@/server/repositories/repository.repository";
 import type {
   RepositoryDetailResponse,
+  RepositoryListItemResponse,
   RepositoryReportResponse,
 } from "@/types/api";
+
+export async function listRepositoriesWithLatestJob(): Promise<
+  RepositoryListItemResponse[]
+> {
+  const repositoryRows = await findAllRepositories();
+
+  return Promise.all(
+    repositoryRows.map(async (row) => {
+      const repository = toRepository(row);
+      const latestJobRow = await findLatestAnalysisJobByRepositoryId(repository.id);
+      const latestJob = latestJobRow ? toAnalysisJob(latestJobRow) : null;
+
+      return {
+        repository: toRepositoryResponse(repository),
+        latestJob: latestJob ? toAnalysisJobSummaryResponse(latestJob) : null,
+        latestStatus: latestJob?.status ?? null,
+      };
+    }),
+  );
+}
 
 export async function getRepositoryWithLatestJob(
   repositoryId: string,

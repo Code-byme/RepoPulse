@@ -15,10 +15,10 @@ function MetadataRow({
   mono?: boolean;
 }) {
   return (
-    <div className="flex justify-between gap-4 border-b border-zinc-200 pb-3 dark:border-zinc-800">
-      <dt className="text-zinc-500 dark:text-zinc-400">{label}</dt>
+    <div className="flex justify-between gap-4 border-b border-border pb-3">
+      <dt className="text-sm text-text-secondary">{label}</dt>
       <dd
-        className={`text-right text-zinc-900 dark:text-zinc-100 ${
+        className={`text-right text-text-primary ${
           mono ? "font-mono text-xs break-all" : "text-sm"
         }`}
       >

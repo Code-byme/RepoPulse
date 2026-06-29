@@ -38,11 +38,9 @@ export function JobCompletedActions({ repositoryId }: JobCompletedActionsProps) 
   }, [redirectCancelled, reportHref, router, secondsRemaining]);
 
   return (
-    <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-900/50 dark:bg-emerald-950/30">
-      <p className="text-sm font-medium text-emerald-900 dark:text-emerald-200">
-        Analysis completed successfully
-      </p>
-      <p className="mt-1 text-sm text-emerald-800 dark:text-emerald-300">
+    <div className="rp-alert-success">
+      <p className="text-sm font-medium text-green">Analysis completed successfully</p>
+      <p className="mt-1 text-sm text-text-secondary">
         {redirectCancelled
           ? "Open the report when you are ready."
           : `Redirecting to report in ${secondsRemaining}s…`}
@@ -52,13 +50,13 @@ export function JobCompletedActions({ repositoryId }: JobCompletedActionsProps) 
           View Report
         </Button>
         {!redirectCancelled ? (
-          <Button
+          <button
             type="button"
-            className="bg-white text-emerald-900 ring-1 ring-inset ring-emerald-300 hover:bg-emerald-100 dark:bg-transparent dark:text-emerald-200 dark:ring-emerald-800 dark:hover:bg-emerald-950/50"
+            className="rp-btn-secondary w-full sm:w-auto"
             onClick={() => setRedirectCancelled(true)}
           >
             Stay on this page
-          </Button>
+          </button>
         ) : null}
       </div>
     </div>

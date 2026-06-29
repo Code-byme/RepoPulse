@@ -1,14 +1,14 @@
 import { DashboardContainer } from "@/components/ui/DashboardContainer";
-import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { TerminalLoader } from "@/components/ui/TerminalLoader";
 
 export default function RepositoryReportLoadingPage() {
   return (
     <DashboardContainer>
-      <div className="flex flex-col items-center gap-4 py-16 text-center">
-        <LoadingSpinner className="h-8 w-8" />
-        <p className="text-sm text-zinc-600 dark:text-zinc-400">
-          Loading analysis report…
-        </p>
+      <div className="flex flex-col items-center gap-4 py-16">
+        <TerminalLoader
+          command="repopulse fetch --report"
+          steps={["Loading analysis report…", "Parsing structural metrics…", "Rendering signals…"]}
+        />
       </div>
     </DashboardContainer>
   );

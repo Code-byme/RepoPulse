@@ -1,14 +1,14 @@
 import { PageContainer } from "@/components/ui/PageContainer";
-import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { TerminalLoader } from "@/components/ui/TerminalLoader";
 
 export default function JobLoadingPage() {
   return (
     <PageContainer>
-      <div className="flex flex-col items-center gap-4 py-16 text-center">
-        <LoadingSpinner className="h-8 w-8" />
-        <p className="text-sm text-zinc-600 dark:text-zinc-400">
-          Loading job details…
-        </p>
+      <div className="flex flex-col items-center gap-4 py-16">
+        <TerminalLoader
+          command="repopulse jobs --inspect"
+          steps={["Loading job details…", "Checking job status…", "Fetching logs…"]}
+        />
       </div>
     </PageContainer>
   );
