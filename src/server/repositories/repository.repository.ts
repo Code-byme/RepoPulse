@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 
 import { db } from "@/lib/db";
 import {
@@ -69,6 +69,17 @@ export async function updateRepositoryLastAnalyzedAt(
     .returning();
 
   return row;
+}
+
+export async function findAllRepositories(): Promise<RepositoryRow[]> {
+  return db
+    .select()
+    .from(repositories)
+    .orderBy(
+      desc(
+        sql`coalesce(${repositories.lastAnalyzedAt}, ${repositories.createdAt})`,
+      ),
+    );
 }
 
 export async function updateRepositoryDefaultBranch(

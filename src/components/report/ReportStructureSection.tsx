@@ -15,21 +15,14 @@ function DetectionList({
 }) {
   return (
     <div>
-      <h3 className="mb-3 text-sm font-medium text-zinc-900 dark:text-zinc-100">
-        {title}
-      </h3>
+      <h3 className="rp-subheading">{title}</h3>
       <ul className="space-y-2">
         {items.map((item) => (
-          <li
-            key={item.label}
-            className="flex items-center justify-between rounded-lg border border-zinc-200 px-3 py-2 text-sm dark:border-zinc-800"
-          >
-            <span className="text-zinc-700 dark:text-zinc-300">{item.label}</span>
+          <li key={item.label} className="rp-detection-row">
+            <span className="rp-detection-label">{item.label}</span>
             <span
               className={
-                item.detected
-                  ? "font-medium text-emerald-700 dark:text-emerald-300"
-                  : "text-zinc-400"
+                item.detected ? "rp-detection-value--yes" : "rp-detection-value--no"
               }
             >
               {item.detected ? "Detected" : "Not found"}

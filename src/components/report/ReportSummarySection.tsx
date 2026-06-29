@@ -57,7 +57,7 @@ export function ReportSummarySection({ report }: ReportSummarySectionProps) {
         />
       </div>
       {summary_json.highlights.length > 0 ? (
-        <ul className="mt-5 list-disc space-y-1 pl-5 text-sm text-zinc-600 dark:text-zinc-400">
+        <ul className="mt-5 list-disc space-y-1 pl-5 text-sm text-text-secondary">
           {summary_json.highlights.map((highlight) => (
             <li key={highlight}>{highlight}</li>
           ))}

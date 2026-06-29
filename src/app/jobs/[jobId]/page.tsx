@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 
+import { AppHeader } from "@/components/layout/AppHeader";
 import { JobStatusPanel } from "@/components/JobStatusPanel";
-import { PageContainer } from "@/components/ui/PageContainer";
+import { DashboardContainer } from "@/components/ui/DashboardContainer";
 import { parseUuidParam } from "@/lib/validators/params";
 
 type JobPageProps = {
@@ -18,22 +19,25 @@ export default async function JobPage({ params }: JobPageProps) {
   }
 
   return (
-    <PageContainer>
-      <div className="rounded-2xl border border-zinc-200 bg-white p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
-        <div className="mb-8 space-y-2">
-          <p className="text-sm font-medium uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-            Job Monitor
-          </p>
-          <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-            Analysis Job
-          </h1>
-          <p className="text-sm text-zinc-600 dark:text-zinc-400">
-            Track progress while your repository is analyzed in the background.
-          </p>
-        </div>
+    <>
+      <AppHeader />
+      <DashboardContainer>
+        <div className="mx-auto max-w-lg rp-panel">
+          <div className="mb-8 space-y-2">
+            <p className="text-xs font-medium uppercase tracking-[0.12em] text-text-muted">
+              Job Monitor
+            </p>
+            <h1 className="text-2xl font-semibold tracking-tight text-text-primary">
+              Analysis Job
+            </h1>
+            <p className="text-[13px] text-text-secondary">
+              Track progress while your repository is analyzed in the background.
+            </p>
+          </div>
 
-        <JobStatusPanel jobId={jobId} />
-      </div>
-    </PageContainer>
+          <JobStatusPanel jobId={jobId} />
+        </div>
+      </DashboardContainer>
+    </>
   );
 }

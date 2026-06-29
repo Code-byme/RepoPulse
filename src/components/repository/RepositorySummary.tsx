@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { StatusBadge } from "@/components/job/StatusBadge";
+import { TerminalCommandBar } from "@/components/ui/TerminalCommandBar";
 import { EmptyState } from "@/components/ui/EmptyState";
 import type { RepositoryDetailResponse, RepositoryReportResponse } from "@/types/api";
 import type { StructureDetection } from "@/types/github-analysis";
@@ -18,37 +19,24 @@ export function RepositoryHeader({
   backHref = "/",
 }: RepositoryHeaderProps) {
   return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-      <div className="space-y-2">
-        <Link
-          href={backHref}
-          className="text-sm font-medium text-zinc-600 underline-offset-4 hover:underline dark:text-zinc-400"
-        >
-          ← Back
-        </Link>
-        <div>
-          <p className="text-sm font-medium uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-            Repository
-          </p>
-          <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-            {repository.fullName}
-          </h1>
-        </div>
-        <a
-          href={repository.githubUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-block text-sm text-zinc-600 underline-offset-4 hover:underline dark:text-zinc-400"
-        >
-          {repository.githubUrl}
-        </a>
+    <div className="space-y-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <TerminalCommandBar repoFullName={repository.fullName} backHref={backHref} />
+        {latestStatus ? (
+          <div className="shrink-0 space-y-2 sm:pt-1">
+            <p className="text-[13px] text-text-secondary">Latest job status</p>
+            <StatusBadge status={latestStatus} />
+          </div>
+        ) : null}
       </div>
-      {latestStatus ? (
-        <div className="space-y-2">
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">Latest job status</p>
-          <StatusBadge status={latestStatus} />
-        </div>
-      ) : null}
+      <a
+        href={repository.githubUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-block font-mono text-xs text-text-muted transition-colors hover:text-text-secondary"
+      >
+        {repository.githubUrl}
+      </a>
     </div>
   );
 }
@@ -63,6 +51,64 @@ function hasFrontendSignals(structure: StructureDetection): boolean {
 
 function hasBackendSignals(structure: StructureDetection): boolean {
   return structure.folders.api || structure.folders.services || structure.folders.db;
+}
+
+function QuickSummarySignal({
+  label,
+  value,
+}: {
+  label: string;
+  value: boolean;
+}) {
+  const isPositive = value;
+
+  return (
+    <div
+      className={`rp-signal ${isPositive ? "rp-signal--positive" : "rp-signal--negative"}`}
+    >
+      <span className="rp-signal-label">
+        <span
+          className={
+            isPositive ? "rp-signal-mark--positive" : "rp-signal-mark--negative"
+          }
+        >
+          {isPositive ? "+" : "-"}
+        </span>
+        {label}
+      </span>
+      <span
+        className={
+          isPositive ? "rp-signal-value--positive" : "rp-signal-value--negative"
+        }
+      >
+        {isPositive ? "Yes" : "No"}
+      </span>
+    </div>
+  );
+}
+
+function QuickSummaryStat({
+  label,
+  value,
+  tone = "default",
+}: {
+  label: string;
+  value: string | number;
+  tone?: "default" | "blue" | "accent";
+}) {
+  const valueClass =
+    tone === "blue"
+      ? "rp-stat-value rp-stat-value--blue"
+      : tone === "accent"
+        ? "rp-stat-value rp-stat-value--accent"
+        : "rp-stat-value";
+
+  return (
+    <div className="rp-stat">
+      <p className="rp-stat-label">{label}</p>
+      <p className={valueClass}>{value}</p>
+    </div>
+  );
 }
 
 export function RepositoryQuickSummary({ reportData }: RepositoryQuickSummaryProps) {
@@ -80,42 +126,37 @@ export function RepositoryQuickSummary({ reportData }: RepositoryQuickSummaryPro
   const { report } = reportData.report;
   const { summary_json, metrics_json, todos_json, structure_json } = report;
 
-  const cards = [
-    { label: "Primary language", value: summary_json.repository.primaryLanguage ?? "Unknown" },
-    {
-      label: "Architecture",
-      value: formatArchitectureStyle(summary_json.architectureStyle),
-    },
-    { label: "Total files", value: metrics_json.totalFiles },
-    { label: "TODO items", value: todos_json.total },
-    { label: "Frontend signals", value: hasFrontendSignals(structure_json) ? "Yes" : "No" },
-    { label: "Backend signals", value: hasBackendSignals(structure_json) ? "Yes" : "No" },
-    {
-      label: "Docker",
-      value:
-        structure_json.configs.dockerfile || structure_json.configs.dockerCompose
-          ? "Yes"
-          : "No",
-    },
-    {
-      label: "CI workflows",
-      value: structure_json.folders.githubWorkflows ? "Yes" : "No",
-    },
-  ];
-
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      {cards.map((card) => (
-        <div
-          key={card.label}
-          className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950"
-        >
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">{card.label}</p>
-          <p className="mt-1 text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-            {card.value}
-          </p>
-        </div>
-      ))}
+      <QuickSummaryStat
+        label="Primary language"
+        value={summary_json.repository.primaryLanguage ?? "Unknown"}
+        tone="blue"
+      />
+      <QuickSummaryStat
+        label="Architecture"
+        value={formatArchitectureStyle(summary_json.architectureStyle)}
+      />
+      <QuickSummaryStat label="Total files" value={metrics_json.totalFiles} />
+      <QuickSummaryStat label="TODO items" value={todos_json.total} tone="accent" />
+      <QuickSummarySignal
+        label="Frontend signals"
+        value={hasFrontendSignals(structure_json)}
+      />
+      <QuickSummarySignal
+        label="Backend signals"
+        value={hasBackendSignals(structure_json)}
+      />
+      <QuickSummarySignal
+        label="Docker"
+        value={
+          structure_json.configs.dockerfile || structure_json.configs.dockerCompose
+        }
+      />
+      <QuickSummarySignal
+        label="CI workflows"
+        value={structure_json.folders.githubWorkflows}
+      />
     </div>
   );
 }
@@ -126,7 +167,7 @@ export function RepositoryMetaFooter({
   repository: RepositoryDetailResponse["repository"];
 }) {
   return (
-    <p className="text-sm text-zinc-500 dark:text-zinc-400">
+    <p className="font-mono text-sm text-text-muted">
       Last analyzed: {formatTimestamp(repository.lastAnalyzedAt)}
     </p>
   );

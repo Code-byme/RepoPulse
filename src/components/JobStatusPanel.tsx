@@ -19,10 +19,8 @@ function JobLoadingState() {
     <div className="flex flex-col items-center gap-4 py-8 text-center">
       <LoadingSpinner className="h-8 w-8" />
       <div className="space-y-1">
-        <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-          Loading job status
-        </p>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="text-sm font-medium text-text-primary">Loading job status</p>
+        <p className="text-sm text-text-secondary">
           Fetching the latest analysis job details…
         </p>
       </div>
@@ -37,14 +35,14 @@ function JobProcessingState({ status }: { status: "queued" | "processing" }) {
       : "Analysis is in progress. This may take a minute.";
 
   return (
-    <div className="flex items-start gap-3 rounded-lg border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-900/50">
+    <div className="rp-alert-info">
       <LoadingSpinner className="mt-0.5 h-4 w-4 shrink-0" />
       <div className="space-y-1">
-        <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+        <p className="text-sm font-medium text-text-primary">
           {status === "queued" ? "Waiting to start" : "Processing repository"}
         </p>
-        <p className="text-sm text-zinc-600 dark:text-zinc-400">{message}</p>
-        <p className="text-xs text-zinc-500 dark:text-zinc-500">
+        <p className="text-sm text-text-secondary">{message}</p>
+        <p className="text-xs text-text-muted">
           Checking for updates every few seconds…
         </p>
       </div>
@@ -63,7 +61,7 @@ export function JobStatusPanel({ jobId }: JobStatusPanelProps) {
     return (
       <div className="space-y-4">
         <ErrorMessage message={error} />
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="text-sm text-text-secondary">
           Verify the job ID and try again.
         </p>
         <Button type="button" onClick={() => void refresh()}>
@@ -81,13 +79,10 @@ export function JobStatusPanel({ jobId }: JobStatusPanelProps) {
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4">
         <div className="space-y-2">
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">Current status</p>
+          <p className="text-[13px] text-text-secondary">Current status</p>
           <StatusBadge status={job.status} />
         </div>
-        <Link
-          href="/"
-          className="text-sm font-medium text-zinc-700 underline-offset-4 hover:underline dark:text-zinc-300"
-        >
+        <Link href="/" className="rp-link-accent text-sm font-medium">
           Analyze another
         </Link>
       </div>
@@ -103,7 +98,7 @@ export function JobStatusPanel({ jobId }: JobStatusPanelProps) {
           <ErrorMessage
             message={job.errorMessage ?? "The analysis job failed unexpectedly."}
           />
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+          <p className="text-sm text-text-secondary">
             You can submit the repository again from the homepage.
           </p>
         </div>
@@ -114,7 +109,7 @@ export function JobStatusPanel({ jobId }: JobStatusPanelProps) {
       ) : null}
 
       {job.status === "completed" && !job.repositoryId ? (
-        <p className="text-sm text-zinc-600 dark:text-zinc-400">
+        <p className="text-sm text-text-secondary">
           Analysis completed, but no repository ID was returned for the report link.
         </p>
       ) : null}

@@ -4,8 +4,13 @@ import { NotFoundError } from "@/server/errors";
 import {
   getRepositoryReportByRepositoryId,
   getRepositoryWithLatestJob,
+  listRepositoriesWithLatestJob,
 } from "@/server/services/repository-read.service";
 import { parseUuidParam } from "@/lib/validators/params";
+
+export async function loadRepositoryList() {
+  return listRepositoriesWithLatestJob();
+}
 
 export async function loadRepositoryDetail(repositoryId: string) {
   parseUuidParam(repositoryId);

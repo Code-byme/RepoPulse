@@ -13,36 +13,34 @@ export function ReportTodosSection({ todos }: ReportTodosSectionProps) {
       description={`Scanned ${todos.scannedFileCount} files — ${todos.todoCount} TODO, ${todos.fixmeCount} FIXME.`}
     >
       {todos.items.length > 0 ? (
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-left text-sm">
+        <div className="rp-table-wrap">
+          <table className="rp-table">
             <thead>
-              <tr className="border-b border-zinc-200 dark:border-zinc-800">
-                <th className="py-2 pr-4 font-medium text-zinc-500">Path</th>
-                <th className="py-2 pr-4 font-medium text-zinc-500">Line</th>
-                <th className="py-2 pr-4 font-medium text-zinc-500">Type</th>
-                <th className="py-2 font-medium text-zinc-500">Text</th>
+              <tr>
+                <th>Path</th>
+                <th>Line</th>
+                <th>Type</th>
+                <th>Text</th>
               </tr>
             </thead>
             <tbody>
               {todos.items.map((item, index) => (
-                <tr
-                  key={`${item.path}:${item.line}:${index}`}
-                  className="border-b border-zinc-100 align-top dark:border-zinc-900"
-                >
-                  <td className="py-2 pr-4 font-mono text-xs">{item.path}</td>
-                  <td className="py-2 pr-4">{item.line}</td>
-                  <td className="py-2 pr-4">
+                <tr key={`${item.path}:${item.line}:${index}`} className="align-top">
+                  <td className="rp-mono">{item.path}</td>
+                  <td className="font-mono">{item.line}</td>
+                  <td>
                     <span
-                      className={
+                      className={`rp-status-pill ${
                         item.kind === "FIXME"
-                          ? "rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-800 dark:bg-red-950/50 dark:text-red-300"
-                          : "rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800 dark:bg-amber-950/50 dark:text-amber-300"
-                      }
+                          ? "rp-status-pill--failed"
+                          : "rp-status-pill--queued"
+                      }`}
                     >
+                      <span className="rp-status-dot" aria-hidden="true" />
                       {item.kind}
                     </span>
                   </td>
-                  <td className="py-2 text-zinc-700 dark:text-zinc-300">
+                  <td className="font-mono text-xs text-text-secondary">
                     {item.matchedText}
                   </td>
                 </tr>

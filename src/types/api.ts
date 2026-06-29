@@ -61,6 +61,13 @@ export type RepositoryDetailResponse = {
   latestStatus: AnalysisJobStatus | null;
 };
 
+export type RepositoryListItemResponse = RepositoryDetailResponse;
+
+export type RepositoryListResponse = {
+  repositories: RepositoryListItemResponse[];
+  total: number;
+};
+
 export type RepositoryReportStatus = "complete" | "incomplete";
 
 export type RepositoryReportResponse = {

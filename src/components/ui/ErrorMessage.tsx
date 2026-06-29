@@ -4,10 +4,7 @@ type ErrorMessageProps = {
 
 export function ErrorMessage({ message }: ErrorMessageProps) {
   return (
-    <div
-      role="alert"
-      className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-300"
-    >
+    <div role="alert" className="rp-alert-error">
       {message}
     </div>
   );

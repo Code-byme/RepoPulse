@@ -4,16 +4,63 @@ type StatCardProps = {
   hint?: string;
 };
 
+function getStatValueClass(label: string, value: string | number): string {
+  const normalizedLabel = label.toLowerCase();
+
+  if (normalizedLabel.includes("language")) {
+    return "rp-stat-value rp-stat-value--blue";
+  }
+
+  if (normalizedLabel.includes("todo")) {
+    return "rp-stat-value rp-stat-value--accent";
+  }
+
+  if (
+    normalizedLabel.includes("repository") ||
+    normalizedLabel.includes("architecture")
+  ) {
+    return "rp-stat-value rp-stat-value--mono";
+  }
+
+  return "rp-stat-value";
+}
+
 export function StatCard({ label, value, hint }: StatCardProps) {
+  const stringValue = String(value);
+  const isSignal = stringValue === "Yes" || stringValue === "No";
+  const isPositive = stringValue === "Yes";
+
+  if (isSignal) {
+    return (
+      <div
+        className={`rp-signal ${isPositive ? "rp-signal--positive" : "rp-signal--negative"}`}
+      >
+        <span className="rp-signal-label">
+          <span
+            className={
+              isPositive ? "rp-signal-mark--positive" : "rp-signal-mark--negative"
+            }
+          >
+            {isPositive ? "+" : "-"}
+          </span>
+          {label}
+        </span>
+        <span
+          className={
+            isPositive ? "rp-signal-value--positive" : "rp-signal-value--negative"
+          }
+        >
+          {stringValue}
+        </span>
+      </div>
+    );
+  }
+
   return (
-    <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-900/50">
-      <p className="text-sm text-zinc-500 dark:text-zinc-400">{label}</p>
-      <p className="mt-1 text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
-        {value}
-      </p>
-      {hint ? (
-        <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-500">{hint}</p>
-      ) : null}
+    <div className="rp-stat">
+      <p className="rp-stat-label">{label}</p>
+      <p className={getStatValueClass(label, value)}>{value}</p>
+      {hint ? <p className="rp-stat-hint">{hint}</p> : null}
     </div>
   );
 }
